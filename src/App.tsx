@@ -15,6 +15,7 @@ const App = () => {
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
+  const [movieError, setMovieError] = useState(false);
 
   const openModal = (movie: Movie) => {
     setMovie(movie);
@@ -29,11 +30,12 @@ const App = () => {
     try {
       setIsLoading(true);
       setIsError(false);
+      setMovieError(false);
       const { results } = await getMovies(movie);
       setMovies(results);
       if (results.length === 0) {
         toast.error('No movies found for your request.');
-        return <Toaster />;
+        return setMovieError(true);
       }
       return results;
     } catch (error) {
@@ -51,6 +53,7 @@ const App = () => {
       {isLoading && <Loader />}
       {isError && <ErrorMessage />}
       {isOpenModal && <MovieModal onClose={closeModal} movie={movie} />}
+      {movieError && <Toaster />}
     </div>
   );
 };
